@@ -2,7 +2,7 @@
 using System;
 using System.Text;
 
-namespace RabbitMQ_Publisher
+namespace RabbitMQ_POC_Producer
 {
 	public class ProgramProducer
 	{

@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{0627C3EF-3B03-460A-B96B-6EC0ABC16ADA}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>RabbitMQ_Publisher</RootNamespace>
-    <AssemblyName>RabbitMQ_Publisher</AssemblyName>
+    <RootNamespace>RabbitMQ_POC_Producer</RootNamespace>
+    <AssemblyName>RabbitMQ_POC_Producer</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

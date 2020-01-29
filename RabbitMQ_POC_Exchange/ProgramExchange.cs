@@ -1,7 +1,7 @@
 ﻿using RabbitMQ.Client;
 using System;
 
-namespace RabbitMQ_POC
+namespace RabbitMQ_POC_Exchange
 {
 	public class ProgramExchange
 	{
