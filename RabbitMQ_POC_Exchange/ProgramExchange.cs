@@ -7,7 +7,7 @@ namespace RabbitMQ_POC_Exchange
 	{
 		public static void Main()
 		{
-			Console.Write("Exchange type (fanout, direct, topic, headers): ");
+			Console.Write("Exchange type (fanout, direct, topic): ");
 			var exchangeType = Console.ReadLine();
 
 			var factory = new ConnectionFactory
