@@ -1,19 +1,18 @@
 ﻿using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
 using System;
 using System.Text;
+using System.Threading;
 
 namespace RabbitMQ_POC_Consumer
 {
 	public class ProgramConsumer
 	{
 		private static IModel channel;
-		private static EventingBasicConsumer consumer;
 
 		public static void Main()
 		{
 			Console.Write("Listening queues to this consumer: ");
-			int listeningQueuesCount = int.Parse(Console.ReadLine());
+			var listeningQueuesCount = int.Parse(Console.ReadLine());
 
 			var factory = new ConnectionFactory
 			{
@@ -22,27 +21,43 @@ namespace RabbitMQ_POC_Consumer
 			};
 			IConnection connection = factory.CreateConnection();
 			channel = connection.CreateModel();
-			consumer = new EventingBasicConsumer(channel);
 
-			for (int queueIndex = 0; queueIndex < listeningQueuesCount; queueIndex++)
+			var cancellationTokenSource = new CancellationTokenSource();
+
+			for (var queueIndex = 0; queueIndex < listeningQueuesCount; queueIndex++)
 			{
 				Console.Write($"Queue[{queueIndex}] name: ");
 				var queueName = Console.ReadLine();
 
-				consumer.Received += ConsumerOnReceived;
-				channel.BasicConsume(queueName, false, consumer);
+				CancellationToken cancellationToken = cancellationTokenSource.Token;
+
+				var thread = new Thread(() => DisplayQueueMessage(queueName, cancellationToken));
+				thread.Start();
 			}
 
 			Console.WriteLine(
 				$"Consumer created successfully and listening for {listeningQueuesCount} queue(s).");
 			Console.ReadKey();
+
+			cancellationTokenSource.Cancel();
 		}
 
-		private static void ConsumerOnReceived(object sender, BasicDeliverEventArgs e)
+		private static void DisplayQueueMessage(string queueName, CancellationToken cancellationToken)
 		{
-			Console.WriteLine($"Message for {e.RoutingKey}: {Encoding.UTF8.GetString(e.Body)}");
+			while (true)
+			{
+				if (cancellationToken.IsCancellationRequested)
+				{
+					break;
+				}
 
-			channel.BasicAck(e.DeliveryTag, true);
+				BasicGetResult result = channel.BasicGet(queueName, false);
+				if (result != null)
+				{
+					Console.WriteLine($"Message: {Encoding.ASCII.GetString(result.Body)}");
+					channel.BasicAck(result.DeliveryTag, false);
+				}
+			}
 		}
 	}
 }

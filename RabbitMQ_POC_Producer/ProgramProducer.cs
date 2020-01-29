@@ -10,7 +10,6 @@ namespace RabbitMQ_POC_Producer
 		{
 			while (true)
 			{
-
 				Console.Write("Routing key: ");
 				var routingKey = Console.ReadLine();
 
