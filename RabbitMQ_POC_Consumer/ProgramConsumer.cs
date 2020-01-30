@@ -7,6 +7,7 @@ namespace RabbitMQ_POC_Consumer
 {
 	public class ProgramConsumer
 	{
+		private static IConnection connection;
 		private static IModel channel;
 
 		public static void Main()
@@ -19,7 +20,7 @@ namespace RabbitMQ_POC_Consumer
 				Uri = new Uri("amqp://guest:guest@localhost"),
 				ContinuationTimeout = TimeSpan.MaxValue
 			};
-			IConnection connection = factory.CreateConnection();
+			connection = factory.CreateConnection();
 			channel = connection.CreateModel();
 
 			var cancellationTokenSource = new CancellationTokenSource();
@@ -36,7 +37,7 @@ namespace RabbitMQ_POC_Consumer
 			}
 
 			Console.WriteLine(
-				$"Consumer created successfully and listening for {listeningQueuesCount} queue(s).");
+				$"Consumer created successfully and listening to {listeningQueuesCount} queue(s).");
 			Console.ReadKey();
 
 			cancellationTokenSource.Cancel();
@@ -48,6 +49,11 @@ namespace RabbitMQ_POC_Consumer
 			{
 				if (cancellationToken.IsCancellationRequested)
 				{
+					connection.Close();
+					connection.Dispose();
+					channel.Close();
+					channel.Dispose();
+
 					break;
 				}
 
