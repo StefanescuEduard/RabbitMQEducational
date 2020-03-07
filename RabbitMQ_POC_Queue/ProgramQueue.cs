@@ -11,36 +11,41 @@ namespace RabbitMQ_POC_Queue
         {
             var factory = new ConnectionFactory
             {
-                Uri = new Uri("amqp://guest:guest@localhost"),
+                Uri = new Uri(uriString: "amqp://guest:guest@localhost"),
                 ContinuationTimeout = TimeSpan.MaxValue
             };
 
-            Console.Write("Queues count: ");
-            var queuesCount = int.Parse(Console.ReadLine());
+            Console.Write(value: "Queues count: ");
+            var queuesCount = int.Parse(s: Console.ReadLine());
 
             for (var queueIndex = 0; queueIndex < queuesCount; queueIndex++)
             {
-                Console.Write($"Queue[{queueIndex}] name: ");
+                Console.Write(value: $"Queue[{queueIndex}] name: ");
                 var queueName = Console.ReadLine();
 
-                Console.Write($"Routing key for Queue[{queueIndex}]: ");
+                Console.Write(value: $"Routing key for Queue[{queueIndex}]: ");
                 var routingKey = Console.ReadLine();
 
                 using (IConnection connection = factory.CreateConnection())
                 {
                     using (channel = connection.CreateModel())
                     {
-                        channel.QueueDelete(queueName);
-                        channel.QueueDeclare(queueName, false, false, false, null);
+                        channel.QueueDeclare(queue: queueName,
+                            durable: false,
+                            exclusive: false,
+                            autoDelete: false,
+                            arguments: null);
 
-                        channel.QueueBind(queueName, "test-exchange", routingKey);
+                        channel.QueueBind(queue: queueName,
+                            exchange: "test-exchange",
+                            routingKey: routingKey);
                     }
                 }
 
-                Console.WriteLine($"Queue {queueName} created.");
+                Console.WriteLine(value: $"Queue {queueName} created.");
             }
 
-            Console.WriteLine($"{queuesCount} queue(s) created.");
+            Console.WriteLine(value: $"{queuesCount} queue(s) created.");
 
             Console.ReadKey();
         }
