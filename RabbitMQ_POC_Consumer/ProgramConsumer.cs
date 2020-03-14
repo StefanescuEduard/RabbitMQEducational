@@ -43,10 +43,10 @@ namespace RabbitMQ_POC_Consumer
 
             WaitHandle.WaitAny(new[] { cancellationToken.WaitHandle });
 
-            connection.Close();
-            connection.Dispose();
             channel.Close();
             channel.Dispose();
+            connection.Close();
+            connection.Dispose();
         }
 
         private static void DisplayQueueMessage(string queueName, CancellationToken cancellationToken)
