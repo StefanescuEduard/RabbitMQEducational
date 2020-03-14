@@ -33,10 +33,8 @@ namespace RabbitMQ_POC_Producer
                         const string exchangeName = "test-exchange";
 
                         channel.BasicPublish(exchangeName, routingKey, properties, messageBytes);
-                        Console.WriteLine($"Publish message: {message}");
+                        Console.WriteLine($"Published message: {message}");
                     }
-
-                    Console.WriteLine("The message was published.");
                 }
             }
         }

@@ -5,65 +5,62 @@ using System.Threading;
 
 namespace RabbitMQ_POC_Consumer
 {
-	public class ProgramConsumer
-	{
-		private static IConnection connection;
-		private static IModel channel;
+    public class ProgramConsumer
+    {
+        private static IConnection connection;
+        private static IModel channel;
 
-		public static void Main()
-		{
-			Console.Write("Listening queues to this consumer: ");
-			var listeningQueuesCount = int.Parse(Console.ReadLine());
+        public static void Main()
+        {
+            Console.Write("Listening queues to this consumer: ");
+            var listeningQueuesCount = int.Parse(Console.ReadLine());
 
-			var factory = new ConnectionFactory
-			{
-				Uri = new Uri("amqp://guest:guest@localhost"),
-				ContinuationTimeout = TimeSpan.MaxValue
-			};
-			connection = factory.CreateConnection();
-			channel = connection.CreateModel();
+            var factory = new ConnectionFactory
+            {
+                Uri = new Uri("amqp://guest:guest@localhost"),
+                ContinuationTimeout = TimeSpan.MaxValue
+            };
+            connection = factory.CreateConnection();
+            channel = connection.CreateModel();
 
-			var cancellationTokenSource = new CancellationTokenSource();
+            var cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken cancellationToken = cancellationTokenSource.Token;
 
-			for (var queueIndex = 0; queueIndex < listeningQueuesCount; queueIndex++)
-			{
-				Console.Write($"Queue[{queueIndex}] name: ");
-				var queueName = Console.ReadLine();
+            for (var queueIndex = 0; queueIndex < listeningQueuesCount; queueIndex++)
+            {
+                Console.Write($"Queue[{queueIndex}] name: ");
+                var queueName = Console.ReadLine();
 
-				CancellationToken cancellationToken = cancellationTokenSource.Token;
+                var thread = new Thread(() => DisplayQueueMessage(queueName, cancellationToken));
+                thread.Start();
+            }
 
-				var thread = new Thread(() => DisplayQueueMessage(queueName, cancellationToken));
-				thread.Start();
-			}
+            Console.WriteLine(
+                $"Consumer created successfully and listening to {listeningQueuesCount} queue(s).");
+            Console.ReadKey();
 
-			Console.WriteLine(
-				$"Consumer created successfully and listening to {listeningQueuesCount} queue(s).");
-			Console.ReadKey();
+            cancellationTokenSource.Cancel();
 
-			cancellationTokenSource.Cancel();
-		}
+            WaitHandle.WaitAny(new[] { cancellationToken.WaitHandle });
 
-		private static void DisplayQueueMessage(string queueName, CancellationToken cancellationToken)
-		{
-			while (true)
-			{
-				if (cancellationToken.IsCancellationRequested)
-				{
-					connection.Close();
-					connection.Dispose();
-					channel.Close();
-					channel.Dispose();
+            connection.Close();
+            connection.Dispose();
+            channel.Close();
+            channel.Dispose();
+        }
 
-					break;
-				}
-
-				BasicGetResult result = channel.BasicGet(queueName, false);
-				if (result != null)
-				{
-					Console.WriteLine($"Message: {Encoding.ASCII.GetString(result.Body)}");
-					channel.BasicAck(result.DeliveryTag, false);
-				}
-			}
-		}
-	}
+        private static void DisplayQueueMessage(string queueName, CancellationToken cancellationToken)
+        {
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                BasicGetResult result = channel.BasicGet(queueName, false);
+                if (result != null)
+                {
+                    Console.WriteLine($"Message: {Encoding.UTF8.GetString(result.Body)}");
+                    channel.BasicAck(result.DeliveryTag, false);
+                    Console.WriteLine("Press any key to stop consuming messages.");
+                }
+            }
+        }
+    }
 }
