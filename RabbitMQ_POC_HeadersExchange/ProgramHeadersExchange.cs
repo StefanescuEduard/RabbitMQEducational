@@ -18,13 +18,12 @@ namespace RabbitMQ_POC_HeadersExchange
                 using (IModel channel = connection.CreateModel())
                 {
                     const string exchangeName = "test-exchange";
-                    channel.ExchangeDelete(exchangeName);
-                    channel.ExchangeDeclare(exchangeName, "headers");
+                    channel.ExchangeDelete(exchange: exchangeName);
+                    channel.ExchangeDeclare(exchange: exchangeName, type: "headers");
                 }
             }
 
-            Console.WriteLine(
-                "Headers Exchange named test-exchange was created successfully.");
+            Console.WriteLine("Headers Exchange named test-exchange was created successfully.");
             Console.ReadKey();
         }
     }

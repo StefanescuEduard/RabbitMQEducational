@@ -33,8 +33,10 @@ namespace RabbitMQ_POC_ConsumerEvents
                 Console.Write($"Queue[{queueIndex}] name: ");
                 var queueName = Console.ReadLine();
 
-
-                channel.BasicConsume(queueName, true, basicConsumer);
+                channel.BasicConsume(
+                    queue: queueName,
+                    autoAck: true,
+                    consumer: basicConsumer);
             }
 
             Console.WriteLine(
@@ -45,6 +47,7 @@ namespace RabbitMQ_POC_ConsumerEvents
 
             WaitHandle.WaitAny(new[] { cancellationToken.WaitHandle });
 
+            basicConsumer.Received -= OnNewMessageReceived;
             channel.Close();
             channel.Dispose();
             connection.Close();

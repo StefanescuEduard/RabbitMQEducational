@@ -18,10 +18,10 @@ namespace RabbitMQ_POC_ProducerProperties
             while (true)
             {
                 Console.Write("Log level: ");
-                var logLevel = Console.ReadLine();
+                string logLevel = Console.ReadLine();
 
                 Console.Write("Message: ");
-                var message = Console.ReadLine();
+                string message = Console.ReadLine();
 
                 var propertiesHeaders = new Dictionary<string, object> { { "log-level", logLevel } };
 
@@ -29,10 +29,10 @@ namespace RabbitMQ_POC_ProducerProperties
                 {
                     using (IModel channel = connection.CreateModel())
                     {
-                        var properties = channel.CreateBasicProperties();
+                        IBasicProperties properties = channel.CreateBasicProperties();
                         properties.Headers = propertiesHeaders;
 
-                        var messageBytes = Encoding.UTF8.GetBytes(message);
+                        byte[] messageBytes = Encoding.UTF8.GetBytes(message);
                         const string exchangeName = "test-exchange";
 
                         channel.BasicPublish(exchangeName, string.Empty, properties, messageBytes);
