@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace RabbitMQ_POC_ProducerProperties
+namespace RabbitMQ.ProducerProperties
 {
     public class ProgramProducerProperties
     {

@@ -3,7 +3,7 @@ using System;
 using System.Text;
 using System.Threading;
 
-namespace RabbitMQ_POC_Consumer
+namespace RabbitMQ.Consumer
 {
     public class ProgramConsumer
     {

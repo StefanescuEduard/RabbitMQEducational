@@ -4,7 +4,7 @@ using System;
 using System.Text;
 using System.Threading;
 
-namespace RabbitMQ_POC_ConsumerEvents
+namespace RabbitMQ.ConsumerEvents
 {
     public class ProgramConsumerEvents
     {

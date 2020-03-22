@@ -1,7 +1,7 @@
 ﻿using RabbitMQ.Client;
 using System;
 
-namespace RabbitMQ_POC_Queue
+namespace RabbitMQ.Queue
 {
     public class ProgramQueue
     {

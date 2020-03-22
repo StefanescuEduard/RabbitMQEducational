@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A8DD7979-EF38-45C7-B582-529C9A787282}</ProjectGuid>
+    <ProjectGuid>{28AB17AA-01EB-4497-A555-E7C90F0255EA}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>RabbitMQ_POC_Queue</RootNamespace>
-    <AssemblyName>RabbitMQ_POC_Queue</AssemblyName>
+    <RootNamespace>RabbitMQ.Consumer</RootNamespace>
+    <AssemblyName>RabbitMQ.Consumer</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -49,7 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ProgramQueue.cs" />
+    <Compile Include="ProgramConsumer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

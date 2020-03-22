@@ -1,12 +1,15 @@
 ﻿using RabbitMQ.Client;
 using System;
 
-namespace RabbitMQ_POC_HeadersExchange
+namespace RabbitMQ.Exchange
 {
-    public class ProgramHeadersExchange
+    public class ProgramExchange
     {
         public static void Main()
         {
+            Console.Write("Exchange type (fanout, direct, topic): ");
+            var exchangeType = Console.ReadLine();
+
             var factory = new ConnectionFactory
             {
                 Uri = new Uri("amqp://guest:guest@localhost"),
@@ -18,12 +21,13 @@ namespace RabbitMQ_POC_HeadersExchange
                 using (IModel channel = connection.CreateModel())
                 {
                     const string exchangeName = "test-exchange";
-                    channel.ExchangeDelete(exchange: exchangeName);
-                    channel.ExchangeDeclare(exchange: exchangeName, type: "headers");
+                    channel.ExchangeDelete(exchangeName);
+                    channel.ExchangeDeclare(exchangeName, exchangeType);
                 }
             }
 
-            Console.WriteLine("Headers Exchange named test-exchange was created successfully.");
+            Console.WriteLine(
+                $"Exchange test-exchange of type {exchangeType} created successfully.");
             Console.ReadKey();
         }
     }

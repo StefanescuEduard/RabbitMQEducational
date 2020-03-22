@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace RabbitMQ_POC_QueueArguments
+namespace RabbitMQ.QueueArguments
 {
     public class ProgramQueueArguments
     {
